@@ -1,0 +1,55 @@
+buildscript {
+    ext.kotlin_version = '1.8.22'
+    repositories {
+        google {
+            content {
+                includeGroupByRegex "com\\.android.*"
+                includeGroupByRegex "com\\.google.*"
+                includeGroupByRegex "androidx.*"
+            }
+        }
+        mavenCentral {
+            content {
+                includeGroupByRegex "org\\.jetbrains.*"
+                includeGroupByRegex "org\\.junit.*"
+            }
+        }
+        gradlePluginPortal()
+    }
+
+    dependencies {
+        classpath "com.android.tools.build:gradle:8.0.2"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+allprojects {
+    repositories {
+        google {
+            content {
+                includeGroupByRegex "com\\.android.*"
+                includeGroupByRegex "com\\.google.*"
+                includeGroupByRegex "androidx.*"
+            }
+        }
+        mavenCentral {
+            content {
+                includeGroupByRegex "org\\.jetbrains.*"
+                includeGroupByRegex "org\\.junit.*"
+            }
+        }
+        gradlePluginPortal()
+    }
+}
+
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(':app')
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}

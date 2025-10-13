@@ -1,0 +1,6 @@
+framework module flutter_dynamic_icon {
+  umbrella header "flutter_dynamic_icon-umbrella.h"
+
+  export *
+  module * { export * }
+}
