@@ -116,11 +116,9 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
                   ? appState.getLocalizedString('editAccount')
                   : appState.getLocalizedString('addAccount'),
             ),
-            leading: Builder(
-              builder: (context) => IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () => Scaffold.of(context).openDrawer(),
-              ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context),
             ),
             actions: [
               if (isEditing)
@@ -128,9 +126,11 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
                   icon: const Icon(Icons.delete),
                   onPressed: _showDeleteDialog,
                 ),
-              IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context),
+              Builder(
+                builder: (context) => IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
               ),
             ],
           ),
@@ -197,7 +197,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
 
                 // Bank
                 DropdownButtonFormField<Bank>(
-                  value: _selectedBank,
+                  initialValue: _selectedBank,
                   decoration: InputDecoration(
                     labelText: appState.getLocalizedString('bank'),
                     prefixIcon: const Icon(Icons.account_balance),
@@ -225,7 +225,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
 
                 // Account Category (dependent on bank)
                 DropdownButtonFormField<BankCategory>(
-                  value: _selectedCategory,
+                  initialValue: _selectedCategory,
                   decoration: InputDecoration(
                     labelText: appState.getLocalizedString('accountType'),
                     prefixIcon: const Icon(Icons.category),
@@ -234,7 +234,7 @@ class _AccountFormScreenState extends State<AccountFormScreen> {
                       .map((c) => DropdownMenuItem(
                             value: c,
                             child: Text(
-                              _categoryDisplayFor(_selectedBank, c),
+                              _categoryDisplayFor(_selectedBank, c, isArabic: appState.isArabic),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                             ),
@@ -520,13 +520,17 @@ String _bankLabel(Bank bank, {bool isArabic = false}) {
 
 // Removed old label helper; replaced by _categoryDisplayFor which includes product and age
 
-String _categoryDisplayFor(Bank? bank, BankCategory category) {
-  final product = _productNameFor(bank, category);
+String _categoryDisplayFor(Bank? bank, BankCategory category, {bool isArabic = false}) {
+  final product = _productNameFor(bank, category, isArabic: isArabic);
   final age = _ageRequirementFor(bank, category);
   return age.isEmpty ? product : '$product ($age)';
 }
 
-String _productNameFor(Bank? bank, BankCategory category) {
+String _productNameFor(Bank? bank, BankCategory category, {bool isArabic = false}) {
+  if (isArabic) {
+    return _getArabicProductName(bank, category);
+  }
+  
   final b = bank ?? Bank.nbk;
   switch (b) {
     case Bank.weyay:
@@ -679,6 +683,147 @@ String _ageRequirementFor(Bank? bank, BankCategory category) {
     case BankCategory.currentSalary:
     case BankCategory.savings:
       return '';
+  }
+}
+
+String _getArabicProductName(Bank? bank, BankCategory category) {
+  final b = bank ?? Bank.nbk;
+  switch (b) {
+    case Bank.weyay:
+      switch (category) {
+        case BankCategory.kids:
+          return 'جيل';
+        case BankCategory.currentSalary:
+        case BankCategory.youth:
+          return 'حساب وياي';
+        case BankCategory.creditCards:
+          return 'بطاقة مدفوعة / افتراضية';
+        case BankCategory.savings:
+          return 'حساب وياي توفير';
+      }
+    case Bank.tam:
+      switch (category) {
+        case BankCategory.currentSalary:
+        case BankCategory.youth:
+          return 'حساب تم';
+        case BankCategory.savings:
+          return 'توفير مربح';
+        case BankCategory.kids:
+          return 'أطفال';
+        case BankCategory.creditCards:
+          return 'مدفوعة مسبقاً / افتراضية';
+      }
+    case Bank.nbk:
+      switch (category) {
+        case BankCategory.currentSalary:
+          return 'حساب جاري';
+        case BankCategory.savings:
+          return 'توفير / سوبر';
+        case BankCategory.kids:
+          return 'زينة';
+        case BankCategory.youth:
+          return 'الشباب';
+        case BankCategory.creditCards:
+          return 'بطاقات ائتمان';
+      }
+    case Bank.kfh:
+      switch (category) {
+        case BankCategory.currentSalary:
+          return 'حساب جاري';
+        case BankCategory.savings:
+          return 'توفير (مضاربة)';
+        case BankCategory.kids:
+          return 'بيتي';
+        case BankCategory.youth:
+          return 'حسابي';
+        case BankCategory.creditCards:
+          return 'بطاقات ائتمان';
+      }
+    case Bank.gulfBank:
+      switch (category) {
+        case BankCategory.currentSalary:
+          return 'حساب جاري';
+        case BankCategory.savings:
+          return 'توفير إلكتروني / توفير الخليج';
+        case BankCategory.kids:
+          return 'نيو';
+        case BankCategory.youth:
+          return 'ريد';
+        case BankCategory.creditCards:
+          return 'بطاقات';
+      }
+    case Bank.cbk:
+      switch (category) {
+        case BankCategory.currentSalary:
+          return 'حساب جاري';
+        case BankCategory.savings:
+          return 'راتب / أساسي';
+        case BankCategory.kids:
+          return 'حسابي الأول';
+        case BankCategory.youth:
+          return 'يو';
+        case BankCategory.creditCards:
+          return 'فيزا / ماستركارد';
+      }
+    case Bank.abk:
+      switch (category) {
+        case BankCategory.savings:
+          return 'توفير / فائدة يومية';
+        case BankCategory.kids:
+          return 'أبطال الأهلي';
+        case BankCategory.currentSalary:
+          return 'حساب';
+        case BankCategory.youth:
+          return 'شباب';
+        case BankCategory.creditCards:
+          return 'بطاقات';
+      }
+    case Bank.burgan:
+      switch (category) {
+        case BankCategory.currentSalary:
+          return 'حسابات جارية';
+        case BankCategory.savings:
+          return 'كنز / توفير';
+        default:
+          return 'حساب';
+      }
+    case Bank.kib:
+      switch (category) {
+        case BankCategory.currentSalary:
+          return 'جاري / راتب';
+        case BankCategory.savings:
+          return 'الدروازة';
+        case BankCategory.kids:
+          return 'أطفال';
+        case BankCategory.youth:
+          return 'شباب';
+        case BankCategory.creditCards:
+          return 'بطاقات';
+      }
+    case Bank.boubyan:
+      switch (category) {
+        case BankCategory.currentSalary:
+          return 'حساب';
+        case BankCategory.savings:
+          return 'توفير';
+        case BankCategory.kids:
+          return 'الغالي';
+        case BankCategory.youth:
+          return 'بريم';
+        case BankCategory.creditCards:
+          return 'بطاقات';
+      }
+    case Bank.warba:
+      switch (category) {
+        case BankCategory.savings:
+          return 'السنبلة';
+        case BankCategory.kids:
+          return 'السنبلة أطفال';
+        case BankCategory.youth:
+          return 'موجة / بلوم';
+        default:
+          return 'حساب';
+      }
   }
 }
 

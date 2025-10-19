@@ -10,6 +10,8 @@ import '../widgets/navigation_drawer.dart';
 import 'transaction_details_screen.dart';
 import 'account_form_screen.dart';
 import 'transfer_screen.dart';
+import 'add_transaction_screen.dart';
+import 'add_funds_screen.dart';
 
 class AccountDetailsScreen extends StatelessWidget {
   final Account account;
@@ -37,11 +39,9 @@ class AccountDetailsScreen extends StatelessWidget {
           drawer: const AppNavigationDrawer(),
           appBar: AppBar(
             title: Text(currentAccount.name),
-            leading: Builder(
-              builder: (context) => IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () => Scaffold.of(context).openDrawer(),
-              ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context),
             ),
             actions: [
               IconButton(
@@ -55,9 +55,11 @@ class AccountDetailsScreen extends StatelessWidget {
                   );
                 },
               ),
-              IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context),
+              Builder(
+                builder: (context) => IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
               ),
             ],
           ),
@@ -69,6 +71,11 @@ class AccountDetailsScreen extends StatelessWidget {
                 // Account Summary Card
                 _buildAccountSummary(context, appState, currentAccount),
                 const SizedBox(height: 12),
+                
+                // Quick Actions
+                _buildQuickActions(context, appState, currentAccount),
+                const SizedBox(height: 12),
+                
                 _buildMainAccountHint(context, appState, currentAccount),
                 if (currentAccount.type == AccountType.credit && currentAccount.balance < 0) ...[
                   const SizedBox(height: 12),
@@ -123,7 +130,7 @@ class AccountDetailsScreen extends StatelessWidget {
                           const SizedBox(width: 8),
                           Flexible(
                             child: Text(
-                              '${account.getBankDisplayNameForLanguage(appState.isArabic)} • ${account.safeCategoryDisplayName}',
+                              '${account.getBankDisplayNameForLanguage(appState.isArabic)} • ${account.getCategoryDisplayNameForLanguage(appState.isArabic)}',
                               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                     color: Theme.of(context)
                                         .colorScheme
@@ -145,7 +152,7 @@ class AccountDetailsScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    account.productName,
+                    account.getProductNameForLanguage(appState.isArabic),
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
@@ -173,6 +180,7 @@ class AccountDetailsScreen extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
+                  forceColor: account.type == AccountType.child ? AppColors.income : null,
                 ),
               ],
             ),
@@ -236,7 +244,7 @@ class AccountDetailsScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Transactions',
+              appState.getLocalizedString('transactions'),
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -267,11 +275,91 @@ class AccountDetailsScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildQuickActions(BuildContext context, AppState appState, Account account) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              appState.getLocalizedString('quickActions'),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddFundsScreen(initialAccountId: account.id),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.add_circle_outline),
+                    label: Text(
+                      appState.getLocalizedString('addFunds'),
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.success,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddTransactionScreen(accountId: account.id),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.receipt_long),
+                    label: Text(
+                      appState.isArabic ? 'إضافة معاملة' : 'Add Transaction',
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryBlue,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildMainAccountHint(BuildContext context, AppState appState, Account account) {
+    // Don't show the hint for child accounts
+    if (account.type == AccountType.child) {
+      return const SizedBox.shrink();
+    }
+    
     final bool isMain = appState.mainAccountId == account.id;
     final String text = isMain
-        ? 'This is your main account. Long press another account in the Accounts page to switch.'
-        : 'Tip: Long press this account from the Accounts page to set it as your main account.';
+        ? appState.getLocalizedString('mainAccountTip')
+        : appState.getLocalizedString('setMainAccountTip');
 
     return Container
     (
@@ -320,14 +408,14 @@ class AccountDetailsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'No transactions yet',
+            appState.getLocalizedString('noTransactionsYet'),
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Transactions will appear here when you make transfers or add transactions',
+            appState.getLocalizedString('transactionsWillAppearHere'),
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
             ),
@@ -360,7 +448,7 @@ class AccountDetailsScreen extends StatelessWidget {
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         subtitle: Text(
-          _formatDate(transaction.dateTime),
+          _formatDate(transaction.dateTime, appState),
           style: TextStyle(
             color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
           ),
@@ -490,6 +578,10 @@ class AccountDetailsScreen extends StatelessWidget {
         // For transfers, show a clean title without the description
         return isArabic ? 'تحويل' : 'Transfer';
       case TransactionCategory.salary:
+        // For salary transactions, use the description if available, otherwise show default
+        if (transaction.description.trim().isNotEmpty) {
+          return transaction.description;
+        }
         return isArabic ? 'إيداع راتب' : 'Salary Deposit';
       case TransactionCategory.food:
         return isArabic ? 'مشتريات طعام' : 'Food Purchase';
@@ -512,16 +604,16 @@ class AccountDetailsScreen extends StatelessWidget {
     }
   }
 
-  String _formatDate(DateTime date) {
+  String _formatDate(DateTime date, AppState appState) {
     final now = DateTime.now();
     final difference = now.difference(date);
 
     if (difference.inDays == 0) {
-      return 'Today';
+      return appState.getLocalizedString('today');
     } else if (difference.inDays == 1) {
-      return 'Yesterday';
+      return appState.getLocalizedString('yesterday');
     } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
+      return '${difference.inDays} ${appState.getLocalizedString('daysAgo')}';
     } else {
       return '${date.day}/${date.month}/${date.year}';
     }

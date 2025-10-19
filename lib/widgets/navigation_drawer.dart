@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/app_state.dart';
 import '../constants/app_colors.dart';
+import '../widgets/currency_text.dart';
 import '../screens/home_screen.dart';
 import '../screens/accounts_screen.dart';
 import '../screens/transfer_screen.dart';
@@ -71,10 +72,6 @@ class AppNavigationDrawer extends StatelessWidget {
                       appState.getLocalizedString('currencyExchange'),
                       () => _navigateAndClose(context, const CurrencyRatesScreen()),
                     ),
-                    
-                    const Divider(),
-                    
-                    // Settings
                     _buildNavigationItem(
                       context,
                       appState,
@@ -82,6 +79,8 @@ class AppNavigationDrawer extends StatelessWidget {
                       appState.getLocalizedString('settings'),
                       () => _navigateAndClose(context, const SettingsScreen()),
                     ),
+                    
+                    const Divider(),
                     
                     // Add some bottom padding to create space
                     const SizedBox(height: 20),
@@ -112,44 +111,38 @@ class AppNavigationDrawer extends StatelessWidget {
           end: Alignment.bottomRight,
         ),
       ),
-      
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              // App Logo/Icon
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Icon(
-                  Icons.account_balance_wallet,
-                  color: Color(0xFF2563EB),
-                  size: 40,
-                ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            // App Logo/Icon
+            Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
               ),
-              const SizedBox(height: 10),
-              // App Name
-              const Text(
-                'Hesabati',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: const Icon(
+                Icons.account_balance_wallet,
+                color: Color(0xFF2563EB),
+                size: 40,
               ),
-              
-              
-              
-            ],
-          ),
+            ),
+            const SizedBox(height: 10),
+            // App Name
+            Text(
+              'Hesabati',
+              style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
-      
+      ),
     );
   }
 
@@ -177,7 +170,7 @@ class AppNavigationDrawer extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -190,22 +183,8 @@ class AppNavigationDrawer extends StatelessWidget {
   }
 
   Widget _buildElevatedFooter(BuildContext context, AppState appState) {
-    return Container(
+    return Card(
       margin: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
-        ),
-      ),
       child: Column(
         children: [
           // Balance Summary Section
@@ -239,9 +218,9 @@ class AppNavigationDrawer extends StatelessWidget {
                               color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
-                          Text(
-                            '${appState.totalBalance.toStringAsFixed(0)} KWD',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          CurrencyText(
+                            amount: appState.totalBalance,
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: AppColors.primaryBlue,
                             ),
@@ -264,7 +243,7 @@ class AppNavigationDrawer extends StatelessWidget {
                     const SizedBox(width: 8),
                     Text(
                       '${appState.accounts.length} ${appState.getLocalizedString('accounts')}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
@@ -313,7 +292,7 @@ class AppNavigationDrawer extends StatelessWidget {
             const SizedBox(width: 12),
             Text(
               appState.getLocalizedString('logout'),
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w500,
                 color: Colors.red,
               ),

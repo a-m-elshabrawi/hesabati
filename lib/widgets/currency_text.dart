@@ -8,6 +8,7 @@ class CurrencyText extends StatelessWidget {
   final TextStyle? style;
   final bool showSign;
   final bool isPositive;
+  final Color? forceColor;
 
   const CurrencyText({
     super.key,
@@ -15,6 +16,7 @@ class CurrencyText extends StatelessWidget {
     this.style,
     this.showSign = false,
     this.isPositive = true,
+    this.forceColor,
   });
 
   @override
@@ -25,7 +27,9 @@ class CurrencyText extends StatelessWidget {
         final formattedAmount = appState.formatCurrency(amount.abs());
         
         Color textColor;
-        if (isPositive) {
+        if (forceColor != null) {
+          textColor = forceColor!;
+        } else if (isPositive) {
           textColor = amount >= 0 ? AppColors.income : AppColors.expense;
         } else {
           textColor = amount < 0 ? AppColors.income : AppColors.expense;

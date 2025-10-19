@@ -26,7 +26,6 @@ class AccountCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AppState>(
       builder: (context, appState, child) {
-        final isArabic = appState.isArabic;
         
         return Card(
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -87,7 +86,7 @@ class AccountCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            _getAccountTypeText(account.type, isArabic),
+                            _getAccountTypeText(appState),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 10,
@@ -115,6 +114,7 @@ class AccountCard extends StatelessWidget {
                             amount: account.balance,
                             showSign: account.type == AccountType.credit && account.balance < 0,
                             style: Theme.of(context).textTheme.titleLarge,
+                            forceColor: account.type == AccountType.child ? AppColors.income : null,
                           ),
                         ],
                       ),
@@ -149,7 +149,7 @@ class AccountCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Text(
-                            _getAccountTypeText(account.type, isArabic),
+                            _getAccountTypeText(appState),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -212,15 +212,9 @@ class AccountCard extends StatelessWidget {
     }
   }
 
-  String _getAccountTypeText(AccountType type, bool isArabic) {
-    switch (type) {
-      case AccountType.bank:
-        return isArabic ? 'حساب جاري' : 'Bank Account';
-      case AccountType.credit:
-        return isArabic ? 'بطاقة ائتمان' : 'Credit Card';
-      case AccountType.child:
-        return isArabic ? 'بطاقة طفل' : 'Child Card';
-    }
+  String _getAccountTypeText(AppState appState) {
+    // Use the actual product name from the account instead of generic labels
+    return account.getProductNameForLanguage(appState.isArabic);
   }
 
   

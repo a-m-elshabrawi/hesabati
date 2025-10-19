@@ -91,6 +91,11 @@ class Account {
     return balance;
   }
 
+  /// Calculate the current balance based on transactions
+  double get calculatedBalance {
+    return transactions.fold(0.0, (sum, transaction) => sum + transaction.amount);
+  }
+
   double get progressPercentage {
     if (spendingLimit == null || spendingLimit == 0) return 0;
     return (usedAmount ?? 0) / spendingLimit!;
@@ -265,43 +270,63 @@ class Account {
     }
   }
 
-  /// Returns bank logo PNG URL
+  /// Returns bank logo URL (for network images only)
   String get bankLogoUrl {
-    switch (bank) {
-      case Bank.nbk:
-        return 'https://logo.clearbit.com/nbk.com?size=256';
-      case Bank.kfh:
-        return 'assets/images/KFH Logo.webp';
-      case Bank.gulfBank:
-        return 'https://logo.clearbit.com/e-gulfbank.com?size=256';
-      case Bank.cbk:
-        return 'assets/images/CBK Square Logo.png';
-      case Bank.abk:
-        return 'https://logo.clearbit.com/eahli.com?size=256';
-      case Bank.burgan:
-        return 'https://logo.clearbit.com/burgan.com?size=256';
-      case Bank.kib:
-        return 'https://logo.clearbit.com/kib.com.kw?size=256';
-      case Bank.boubyan:
-        return 'https://logo.clearbit.com/bankboubyan.com?size=256';
-      case Bank.warba:
-        return 'https://logo.clearbit.com/warbabank.com?size=256';
-      case Bank.weyay:
-        return 'https://logo.clearbit.com/weyaybank.com?size=256';
-      case Bank.tam:
-        return 'https://logo.clearbit.com/tam.bank?size=256';
-    }
+    // All banks now have local assets, so no network URLs needed
+    return '';
   }
 
   /// Returns the appropriate ImageProvider for the bank logo
   ImageProvider get bankLogoProvider {
-    if (bank == Bank.kfh) {
-      return const AssetImage('assets/images/KFH Logo.webp');
+    if (hasLocalAsset) {
+      switch (bank) {
+        case Bank.kfh:
+          return const AssetImage('assets/images/KFH Logo.webp');
+        case Bank.cbk:
+          return const AssetImage('assets/images/CBK Square Logo.png');
+        case Bank.tam:
+          return const AssetImage('assets/images/Tam.png');
+        case Bank.nbk:
+          return const AssetImage('assets/images/NBK.jpg');
+        case Bank.gulfBank:
+          return const AssetImage('assets/images/Gulf Bank.png');
+        case Bank.abk:
+          return const AssetImage('assets/images/ABK.png');
+        case Bank.burgan:
+          return const AssetImage('assets/images/Burgan.png');
+        case Bank.kib:
+          return const AssetImage('assets/images/KIB Bank Logo.jpg');
+        case Bank.boubyan:
+          return const AssetImage('assets/images/Boubyan.jpg');
+        case Bank.warba:
+          return const AssetImage('assets/images/warba.png');
+        case Bank.weyay:
+          return const AssetImage('assets/images/weyay.webp');
+      }
     }
-    if (bank == Bank.cbk) {
-      return const AssetImage('assets/images/CBK Square Logo.png');
-    }
+    // For network images
     return NetworkImage(bankLogoUrl);
+  }
+
+  /// Returns true if the bank has a local asset image
+  bool get hasLocalAsset {
+    return bank == Bank.kfh || 
+           bank == Bank.cbk || 
+           bank == Bank.tam || 
+           bank == Bank.nbk || 
+           bank == Bank.gulfBank ||
+           bank == Bank.abk ||
+           bank == Bank.burgan ||
+           bank == Bank.kib ||
+           bank == Bank.boubyan ||
+           bank == Bank.warba ||
+           bank == Bank.weyay;
+  }
+
+  /// Returns a reliable image provider that falls back to initials if network fails
+  ImageProvider get reliableBankLogoProvider {
+    // All banks now have local assets
+    return bankLogoProvider;
   }
 
   /// Returns a fallback widget when bank logo fails to load
@@ -441,6 +466,15 @@ class Account {
     }
   }
 
+  /// Returns a safe localized category display name
+  String getSafeCategoryDisplayNameForLanguage(bool isArabic) {
+    try {
+      return getCategoryDisplayNameForLanguage(isArabic);
+    } catch (_) {
+      return isArabic ? 'حساب جاري / راتب' : 'Current / Salary';
+    }
+  }
+
   // Fallback mapping to distribute banks for legacy accounts without bank data
   Bank _fallbackBankById(String id) {
     final index = id.hashCode.abs() % Bank.values.length;
@@ -492,6 +526,26 @@ class Account {
     }
   }
 
+  /// Returns a localized category label based on language
+  String getCategoryDisplayNameForLanguage(bool isArabic) {
+    if (isArabic) {
+      switch (category) {
+        case BankCategory.currentSalary:
+          return 'حساب جاري / راتب';
+        case BankCategory.savings:
+          return 'حساب توفير';
+        case BankCategory.kids:
+          return 'حساب أطفال';
+        case BankCategory.youth:
+          return 'حساب شباب';
+        case BankCategory.creditCards:
+          return 'بطاقات ائتمان';
+      }
+    } else {
+      return categoryDisplayName;
+    }
+  }
+
   /// Helper to infer AccountType from selected bank category
   static AccountType inferTypeFromCategory(BankCategory category) {
     switch (category) {
@@ -503,6 +557,15 @@ class Account {
       case BankCategory.savings:
       case BankCategory.youth:
         return AccountType.bank;
+    }
+  }
+
+  /// Returns localized product name based on language
+  String getProductNameForLanguage(bool isArabic) {
+    if (isArabic) {
+      return _getArabicProductName();
+    } else {
+      return productName;
     }
   }
 
@@ -645,6 +708,149 @@ class Account {
             return 'Wave / Bloom';
           default:
             return 'Account';
+        }
+    }
+  }
+
+  /// Returns Arabic product name for the bank and category
+  String _getArabicProductName() {
+    final b = safeBank;
+    final c = safeCategory;
+    switch (b) {
+      case Bank.weyay:
+        switch (c) {
+          case BankCategory.kids:
+            return 'جيل';
+          case BankCategory.savings:
+            return 'حساب وياي توفير';
+          case BankCategory.currentSalary:
+          case BankCategory.youth:
+            return 'حساب وياي';
+          case BankCategory.creditCards:
+            return 'بطاقة مدفوعة / افتراضية';
+        }
+      case Bank.tam:
+        switch (c) {
+          case BankCategory.currentSalary:
+          case BankCategory.youth:
+            return 'حساب تم';
+          case BankCategory.savings:
+            return 'توفير مربح';
+          case BankCategory.kids:
+            return 'أطفال';
+          case BankCategory.creditCards:
+            return 'مدفوعة مسبقاً / افتراضية';
+        }
+      case Bank.nbk:
+        switch (c) {
+          case BankCategory.currentSalary:
+            return 'حساب جاري';
+          case BankCategory.savings:
+            return 'توفير / سوبر';
+          case BankCategory.kids:
+            return 'زينة';
+          case BankCategory.youth:
+            return 'الشباب';
+          case BankCategory.creditCards:
+            return 'بطاقات ائتمان';
+        }
+      case Bank.kfh:
+        switch (c) {
+          case BankCategory.currentSalary:
+            return 'حساب جاري';
+          case BankCategory.savings:
+            return 'توفير (مضاربة)';
+          case BankCategory.kids:
+            return 'بيتي';
+          case BankCategory.youth:
+            return 'حسابي';
+          case BankCategory.creditCards:
+            return 'بطاقات ائتمان';
+        }
+      case Bank.gulfBank:
+        switch (c) {
+          case BankCategory.currentSalary:
+            return 'حساب جاري';
+          case BankCategory.savings:
+            return 'توفير إلكتروني / توفير الخليج';
+          case BankCategory.kids:
+            return 'نيو';
+          case BankCategory.youth:
+            return 'ريد';
+          case BankCategory.creditCards:
+            return 'بطاقات';
+        }
+      case Bank.cbk:
+        switch (c) {
+          case BankCategory.currentSalary:
+            return 'حساب جاري';
+          case BankCategory.savings:
+            return 'راتب / أساسي';
+          case BankCategory.kids:
+            return 'حسابي الأول';
+          case BankCategory.youth:
+            return 'يو';
+          case BankCategory.creditCards:
+            return 'فيزا / ماستركارد';
+        }
+      case Bank.abk:
+        switch (c) {
+          case BankCategory.savings:
+            return 'توفير / فائدة يومية';
+          case BankCategory.kids:
+            return 'أبطال الأهلي';
+          case BankCategory.currentSalary:
+            return 'حساب';
+          case BankCategory.youth:
+            return 'شباب';
+          case BankCategory.creditCards:
+            return 'بطاقات';
+        }
+      case Bank.burgan:
+        switch (c) {
+          case BankCategory.currentSalary:
+            return 'حسابات جارية';
+          case BankCategory.savings:
+            return 'كنز / توفير';
+          default:
+            return 'حساب';
+        }
+      case Bank.kib:
+        switch (c) {
+          case BankCategory.currentSalary:
+            return 'جاري / راتب';
+          case BankCategory.savings:
+            return 'الدروازة';
+          case BankCategory.kids:
+            return 'أطفال';
+          case BankCategory.youth:
+            return 'شباب';
+          case BankCategory.creditCards:
+            return 'بطاقات';
+        }
+      case Bank.boubyan:
+        switch (c) {
+          case BankCategory.currentSalary:
+            return 'حساب';
+          case BankCategory.savings:
+            return 'توفير';
+          case BankCategory.kids:
+            return 'الغالي';
+          case BankCategory.youth:
+            return 'بريم';
+          case BankCategory.creditCards:
+            return 'بطاقات';
+        }
+      case Bank.warba:
+        switch (c) {
+          case BankCategory.savings:
+            return 'السنبلة';
+          case BankCategory.kids:
+            return 'السنبلة أطفال';
+          case BankCategory.youth:
+            return 'موجة / بلوم';
+          default:
+            return 'حساب';
         }
     }
   }

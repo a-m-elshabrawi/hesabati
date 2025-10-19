@@ -757,6 +757,42 @@ class AppStrings {
   static const String emptyingAccountToDelete = 'Emptying account to delete it.';
   static const String emptyingAccountToDeleteAr = 'إفراغ الحساب لحذفه.';
 
+  // Add Funds and Add Transaction
+  static const String addFunds = 'Add Funds';
+  static const String addFundsAr = 'إضافة أموال';
+  static const String addTransaction = 'Add Transaction';
+  static const String addTransactionAr = 'إضافة معاملة';
+  static const String accountInformation = 'Account Information';
+  static const String accountInformationAr = 'معلومات الحساب';
+  static const String transactionCategory = 'Transaction Category';
+  static const String transactionCategoryAr = 'فئة المعاملة';
+  static const String selectTransactionCategory = 'Select transaction category';
+  static const String selectTransactionCategoryAr = 'اختر فئة المعاملة';
+  static const String pleaseSelectCategory = 'Please select a category';
+  static const String pleaseSelectCategoryAr = 'يرجى اختيار فئة المعاملة';
+  static const String otherCategoryDescription = 'Other Category Description';
+  static const String otherCategoryDescriptionAr = 'وصف الفئة الأخرى';
+  static const String enterCategoryDescription = 'Enter category description';
+  static const String enterCategoryDescriptionAr = 'أدخل وصف الفئة';
+  static const String pleaseEnterCategoryDescription = 'Please enter category description';
+  static const String pleaseEnterCategoryDescriptionAr = 'يرجى إدخال وصف الفئة';
+  static const String enterAmount = 'Enter amount';
+  static const String enterAmountAr = 'أدخل المبلغ';
+  static const String amountTooLarge = 'Amount is too large';
+  static const String amountTooLargeAr = 'المبلغ كبير جداً';
+  static const String transactionDescription = 'Transaction description';
+  static const String transactionDescriptionAr = 'وصف المعاملة';
+  static const String fundDeposit = 'Fund Deposit';
+  static const String fundDepositAr = 'إيداع أموال';
+  static const String fundsAddedSuccessfully = 'Funds added successfully';
+  static const String fundsAddedSuccessfullyAr = 'تم إضافة الأموال بنجاح';
+  static const String errorAddingFunds = 'Error adding funds';
+  static const String errorAddingFundsAr = 'حدث خطأ أثناء إضافة الأموال';
+  static const String transactionAddedSuccessfully = 'Transaction added successfully';
+  static const String transactionAddedSuccessfullyAr = 'تم إضافة المعاملة بنجاح';
+  static const String errorAddingTransaction = 'Error adding transaction';
+  static const String errorAddingTransactionAr = 'حدث خطأ أثناء إضافة المعاملة';
+
   // Bank Names - English
   static const String nbkFullName = 'National Bank of Kuwait';
   static const String kfhFullName = 'Kuwait Finance House';
@@ -782,6 +818,86 @@ class AppStrings {
   static const String warbaFullNameAr = 'بنك وربة';
   static const String weyayFullNameAr = 'بنك وياي';
   static const String tamFullNameAr = 'بنك تم';
+
+  // Bank Account Categories - Arabic
+  static const String currentSalaryAr = 'حساب جاري / راتب';
+  static const String savingsAr = 'حساب توفير';
+  static const String kidsAr = 'حساب أطفال';
+  static const String youthAr = 'حساب شباب';
+  static const String creditCardsAr = 'بطاقات ائتمان';
+
+  // Bank Product Names - Arabic
+  // Weyay Bank Products
+  static const String weyayJeelAr = 'جيل';
+  static const String weyayAccountAr = 'حساب وياي';
+  static const String weyayDebitVirtualCardAr = 'بطاقة مدفوعة / افتراضية';
+  static const String weyaySavingsAr = 'حساب وياي توفير';
+
+  // tam Bank Products
+  static const String tamAccountAr = 'حساب تم';
+  static const String tamProfitEarningSavingsAr = 'توفير مربح';
+  static const String tamKidsAr = 'أطفال';
+  static const String tamPrepaidVirtualAr = 'مدفوعة مسبقاً / افتراضية';
+
+  // NBK Products
+  static const String nbkCurrentAccountAr = 'حساب جاري';
+  static const String nbkSavingsSuperAccountAr = 'توفير / سوبر';
+  static const String nbkZeinaAr = 'زينة';
+  static const String nbkAlShababAr = 'الشباب';
+  static const String nbkCreditCardsAr = 'بطاقات ائتمان';
+
+  // KFH Products
+  static const String kfhCurrentAccountAr = 'حساب جاري';
+  static const String kfhSavingMudarabaAr = 'توفير (مضاربة)';
+  static const String kfhBaitiAr = 'بيتي';
+  static const String kfhHesabiAr = 'حسابي';
+  static const String kfhCreditCardsAr = 'بطاقات ائتمان';
+
+  // Gulf Bank Products
+  static const String gbCurrentAccountAr = 'حساب جاري';
+  static const String gbESavingsGulfSavingsAr = 'توفير إلكتروني / توفير الخليج';
+  static const String gbNeoAr = 'نيو';
+  static const String gbRedAr = 'ريد';
+  static const String gbCardsAr = 'بطاقات';
+
+  // CBK Products
+  static const String cbkCurrentAccountAr = 'حساب جاري';
+  static const String cbkSalaryBaseAr = 'راتب / أساسي';
+  static const String cbkMyFirstAccountAr = 'حسابي الأول';
+  static const String cbkYouAr = 'يو';
+  static const String cbkVisaMastercardAr = 'فيزا / ماستركارد';
+
+  // ABK Products
+  static const String abkSavingsDailyInterestAr = 'توفير / فائدة يومية';
+  static const String abkHeroesAr = 'أبطال الأهلي';
+  static const String abkAccountAr = 'حساب';
+  static const String abkYouthAr = 'شباب';
+  static const String abkCardsAr = 'بطاقات';
+
+  // Burgan Bank Products
+  static const String burganCurrentAccountsAr = 'حسابات جارية';
+  static const String burganKanzSavingsAr = 'كنز / توفير';
+  static const String burganAccountAr = 'حساب';
+
+  // KIB Products
+  static const String kibCurrentSalaryAr = 'جاري / راتب';
+  static const String kibAlDirwazaAr = 'الدروازة';
+  static const String kibKidsAr = 'أطفال';
+  static const String kibYouthAr = 'شباب';
+  static const String kibCardsAr = 'بطاقات';
+
+  // Boubyan Bank Products
+  static const String boubyanAccountAr = 'حساب';
+  static const String boubyanSavingsAr = 'توفير';
+  static const String boubyanAlGhalyAr = 'الغالي';
+  static const String boubyanPrimeAr = 'بريم';
+  static const String boubyanCardsAr = 'بطاقات';
+
+  // Warba Bank Products
+  static const String warbaAlSunbulaAr = 'السنبلة';
+  static const String warbaAlSunbulaKidsAr = 'السنبلة أطفال';
+  static const String warbaWaveBloomAr = 'موجة / بلوم';
+  static const String warbaAccountAr = 'حساب';
 
   // Get localized string based on language
   static String getString(String key, bool isArabic) {
@@ -866,6 +982,11 @@ class AppStrings {
       'thisWeek': {'en': thisWeek, 'ar': thisWeekAr},
       'thisMonth': {'en': thisMonth, 'ar': thisMonthAr},
       'quickActions': {'en': quickActions, 'ar': quickActionsAr},
+      'transactions': {'en': transactions, 'ar': transactionsAr},
+      'noTransactionsYet': {'en': noTransactionsYet, 'ar': noTransactionsYetAr},
+      'transactionsWillAppearHere': {'en': transactionsWillAppearHere, 'ar': transactionsWillAppearHereAr},
+      'mainAccountTip': {'en': mainAccountTip, 'ar': mainAccountTipAr},
+      'setMainAccountTip': {'en': setMainAccountTip, 'ar': setMainAccountTipAr},
       'tip': {'en': tip, 'ar': tipAr},
       'noChildCardsYet': {'en': noChildCardsYet, 'ar': noChildCardsYetAr},
       'addChildCardsDescription': {'en': addChildCardsDescription, 'ar': addChildCardsDescriptionAr},
@@ -990,6 +1111,29 @@ class AppStrings {
       'canTransferRemainingBalance': {'en': canTransferRemainingBalance, 'ar': canTransferRemainingBalanceAr},
       'mainAccount': {'en': mainAccount, 'ar': mainAccountAr},
       'emptyingAccountToDelete': {'en': emptyingAccountToDelete, 'ar': emptyingAccountToDeleteAr},
+      'addFunds': {'en': addFunds, 'ar': addFundsAr},
+      'addTransaction': {'en': addTransaction, 'ar': addTransactionAr},
+      'accountInformation': {'en': accountInformation, 'ar': accountInformationAr},
+      'transactionCategory': {'en': transactionCategory, 'ar': transactionCategoryAr},
+      'selectTransactionCategory': {'en': selectTransactionCategory, 'ar': selectTransactionCategoryAr},
+      'pleaseSelectCategory': {'en': pleaseSelectCategory, 'ar': pleaseSelectCategoryAr},
+      'otherCategoryDescription': {'en': otherCategoryDescription, 'ar': otherCategoryDescriptionAr},
+      'enterCategoryDescription': {'en': enterCategoryDescription, 'ar': enterCategoryDescriptionAr},
+      'pleaseEnterCategoryDescription': {'en': pleaseEnterCategoryDescription, 'ar': pleaseEnterCategoryDescriptionAr},
+      'enterAmount': {'en': enterAmount, 'ar': enterAmountAr},
+      'amountTooLarge': {'en': amountTooLarge, 'ar': amountTooLargeAr},
+      'transactionDescription': {'en': transactionDescription, 'ar': transactionDescriptionAr},
+      'fundDeposit': {'en': fundDeposit, 'ar': fundDepositAr},
+      'fundsAddedSuccessfully': {'en': fundsAddedSuccessfully, 'ar': fundsAddedSuccessfullyAr},
+      'errorAddingFunds': {'en': errorAddingFunds, 'ar': errorAddingFundsAr},
+      'transactionAddedSuccessfully': {'en': transactionAddedSuccessfully, 'ar': transactionAddedSuccessfullyAr},
+      'errorAddingTransaction': {'en': errorAddingTransaction, 'ar': errorAddingTransactionAr},
+      // Bank Account Categories
+      'currentSalary': {'en': 'Current / Salary', 'ar': currentSalaryAr},
+      'savings': {'en': 'Savings', 'ar': savingsAr},
+      'kids': {'en': 'Kids', 'ar': kidsAr},
+      'youth': {'en': 'Youth', 'ar': youthAr},
+      'creditCards': {'en': 'Credit Cards', 'ar': creditCardsAr},
     };
 
     return strings[key]?[isArabic ? 'ar' : 'en'] ?? key;
@@ -1255,4 +1399,133 @@ class AppStrings {
     
     return bankNamesWithAbbr[bankCode] ?? bankCode;
   }
+
+  // Get localized bank product name
+  static String getBankProductName(String bankCode, String categoryCode, bool isArabic) {
+    if (!isArabic) {
+      // Return English product names (existing logic)
+      return _getEnglishProductName(bankCode, categoryCode);
+    }
+    
+    // Return Arabic product names
+    return _getArabicProductName(bankCode, categoryCode);
+  }
+
+  static String _getEnglishProductName(String bankCode, String categoryCode) {
+    // This would contain the existing English product name logic
+    // For now, return a placeholder - this should be implemented based on existing _productNameFor logic
+    return 'Product Name';
+  }
+
+  static String _getArabicProductName(String bankCode, String categoryCode) {
+    switch (bankCode) {
+      case 'WY': // Weyay
+        switch (categoryCode) {
+          case 'kids': return weyayJeelAr;
+          case 'currentSalary':
+          case 'youth': return weyayAccountAr;
+          case 'creditCards': return weyayDebitVirtualCardAr;
+          case 'savings': return weyaySavingsAr;
+        }
+        break;
+      case 'TM': // tam
+        switch (categoryCode) {
+          case 'currentSalary':
+          case 'youth': return tamAccountAr;
+          case 'savings': return tamProfitEarningSavingsAr;
+          case 'kids': return tamKidsAr;
+          case 'creditCards': return tamPrepaidVirtualAr;
+        }
+        break;
+      case 'NBK': // NBK
+        switch (categoryCode) {
+          case 'currentSalary': return nbkCurrentAccountAr;
+          case 'savings': return nbkSavingsSuperAccountAr;
+          case 'kids': return nbkZeinaAr;
+          case 'youth': return nbkAlShababAr;
+          case 'creditCards': return nbkCreditCardsAr;
+        }
+        break;
+      case 'KFH': // KFH
+        switch (categoryCode) {
+          case 'currentSalary': return kfhCurrentAccountAr;
+          case 'savings': return kfhSavingMudarabaAr;
+          case 'kids': return kfhBaitiAr;
+          case 'youth': return kfhHesabiAr;
+          case 'creditCards': return kfhCreditCardsAr;
+        }
+        break;
+      case 'GB': // Gulf Bank
+        switch (categoryCode) {
+          case 'currentSalary': return gbCurrentAccountAr;
+          case 'savings': return gbESavingsGulfSavingsAr;
+          case 'kids': return gbNeoAr;
+          case 'youth': return gbRedAr;
+          case 'creditCards': return gbCardsAr;
+        }
+        break;
+      case 'CBK': // CBK
+        switch (categoryCode) {
+          case 'currentSalary': return cbkCurrentAccountAr;
+          case 'savings': return cbkSalaryBaseAr;
+          case 'kids': return cbkMyFirstAccountAr;
+          case 'youth': return cbkYouAr;
+          case 'creditCards': return cbkVisaMastercardAr;
+        }
+        break;
+      case 'ABK': // ABK
+        switch (categoryCode) {
+          case 'savings': return abkSavingsDailyInterestAr;
+          case 'kids': return abkHeroesAr;
+          case 'currentSalary': return abkAccountAr;
+          case 'youth': return abkYouthAr;
+          case 'creditCards': return abkCardsAr;
+        }
+        break;
+      case 'BG': // Burgan
+        switch (categoryCode) {
+          case 'currentSalary': return burganCurrentAccountsAr;
+          case 'savings': return burganKanzSavingsAr;
+          default: return burganAccountAr;
+        }
+      case 'KIB': // KIB
+        switch (categoryCode) {
+          case 'currentSalary': return kibCurrentSalaryAr;
+          case 'savings': return kibAlDirwazaAr;
+          case 'kids': return kibKidsAr;
+          case 'youth': return kibYouthAr;
+          case 'creditCards': return kibCardsAr;
+        }
+        break;
+      case 'BB': // Boubyan
+        switch (categoryCode) {
+          case 'currentSalary': return boubyanAccountAr;
+          case 'savings': return boubyanSavingsAr;
+          case 'kids': return boubyanAlGhalyAr;
+          case 'youth': return boubyanPrimeAr;
+          case 'creditCards': return boubyanCardsAr;
+        }
+        break;
+      case 'WB': // Warba
+        switch (categoryCode) {
+          case 'savings': return warbaAlSunbulaAr;
+          case 'kids': return warbaAlSunbulaKidsAr;
+          case 'youth': return warbaWaveBloomAr;
+          default: return warbaAccountAr;
+        }
+    }
+    return 'Product Name';
+  }
+
+  // Transactions
+  static const String transactions = 'Transactions';
+  static const String transactionsAr = 'المعاملات';
+  static const String noTransactionsYet = 'No transactions yet';
+  static const String noTransactionsYetAr = 'لا توجد معاملات بعد';
+  static const String transactionsWillAppearHere = 'Transactions will appear here when you make transfers or add transactions';
+  static const String transactionsWillAppearHereAr = 'ستظهر المعاملات هنا عند إجراء التحويلات أو إضافة معاملات';
+  static const String mainAccountTip = 'This is your main account. Long press another account in the Accounts page to switch.';
+  static const String mainAccountTipAr = 'هذا هو حسابك الرئيسي. اضغط مطولاً على حساب آخر في صفحة الحسابات للتبديل.';
+  static const String setMainAccountTip = 'Tip: Long press this account from the Accounts page to set it as your main account.';
+  static const String setMainAccountTipAr = 'نصيحة: اضغط مطولاً على هذا الحساب من صفحة الحسابات لتعيينه كحساب رئيسي.';
 }

@@ -7,6 +7,7 @@ import '../widgets/currency_text.dart';
 import '../widgets/navigation_drawer.dart';
 import 'accounts_screen.dart';
 import 'transfer_screen.dart';
+import 'add_funds_screen.dart';
 import 'analytics_screen.dart';
 import 'beneficiaries_screen.dart';
 import 'account_form_screen.dart';
@@ -55,49 +56,40 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildTotalBalanceSection(BuildContext context, AppState appState) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.primaryBlue, AppColors.primaryBlueLight],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+    return Card(
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [AppColors.primaryBlue, AppColors.primaryBlueLight],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(12),
         ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primaryBlue.withOpacity(0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            appState.getLocalizedString('totalBalance'),
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              appState.getLocalizedString('totalBalance'),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          CurrencyText(
-            amount: appState.totalBalance,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              
+            const SizedBox(height: 8),
+            CurrencyText(
+              amount: appState.totalBalance,
+              style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          _buildDebtTip(context, appState),
-        ],
+            const SizedBox(height: 8),
+            _buildDebtTip(context, appState),
+          ],
+        ),
       ),
     );
   }
@@ -157,7 +149,7 @@ class HomeScreen extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -167,9 +159,8 @@ class HomeScreen extends StatelessWidget {
           Expanded(
             child: Text(
               appState.getLocalizedString('tip'),
-              style: const TextStyle(
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Colors.white,
-                fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -180,44 +171,39 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildEmptyState(BuildContext context, AppState appState) {
-    return Container(
-      padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
-        ),
-      ),
-      child: Column(
-        children: [
-          Icon(
-            Icons.account_balance_wallet_outlined,
-            size: 64,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            appState.getLocalizedString('noAccountsYet'),
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          children: [
+            Icon(
+              Icons.account_balance_wallet_outlined,
+              size: 64,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
             ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AccountFormScreen(),
-                ),
-              );
-            },
-            icon: const Icon(Icons.add),
-            label: Text(appState.getLocalizedString('addAccount')),
-          ),
-        ],
+            const SizedBox(height: 16),
+            Text(
+              appState.getLocalizedString('noAccountsYet'),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AccountFormScreen(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.add),
+              label: Text(appState.getLocalizedString('addAccount')),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -259,6 +245,16 @@ class HomeScreen extends StatelessWidget {
               () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const TransferScreen()),
+              ),
+            ),
+            _buildQuickActionCard(
+              context,
+              appState,
+              Icons.add_circle_outline,
+              appState.getLocalizedString('addFunds'),
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AddFundsScreen()),
               ),
             ),
             _buildQuickActionCard(

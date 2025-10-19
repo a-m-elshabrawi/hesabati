@@ -20,16 +20,16 @@ class BeneficiariesScreen extends StatelessWidget {
           drawer: const AppNavigationDrawer(),
           appBar: AppBar(
             title: Text(appState.getLocalizedString('beneficiaries')),
-            leading: Builder(
-              builder: (context) => IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () => Scaffold.of(context).openDrawer(),
-              ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context),
             ),
             actions: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context),
+              Builder(
+                builder: (context) => IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
               ),
             ],
           ),
@@ -186,6 +186,7 @@ class BeneficiariesScreen extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
+                    forceColor: account.type == AccountType.child ? AppColors.income : null,
                   ),
                 ],
               ),

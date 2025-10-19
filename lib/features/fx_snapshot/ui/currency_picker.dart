@@ -99,11 +99,13 @@ class _CurrencyPickerState extends State<CurrencyPicker> {
                     leading: CircleAvatar(
                       backgroundColor: isSelected 
                           ? Theme.of(context).primaryColor 
-                          : Colors.grey.shade300,
+                          : Theme.of(context).colorScheme.surfaceContainerHighest,
                       child: Text(
                         currency,
                         style: TextStyle(
-                          color: isSelected ? Colors.white : Colors.black87,
+                          color: isSelected 
+                              ? Theme.of(context).colorScheme.onPrimary 
+                              : Theme.of(context).colorScheme.onSurfaceVariant,
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
                         ),
@@ -120,7 +122,7 @@ class _CurrencyPickerState extends State<CurrencyPicker> {
                       style: TextStyle(
                         color: isSelected 
                             ? Theme.of(context).primaryColor 
-                            : Colors.grey.shade600,
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                     trailing: isSelected 
@@ -173,7 +175,7 @@ class CurrencySelector extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey.shade300),
+          border: Border.all(color: Theme.of(context).colorScheme.outline),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
@@ -183,8 +185,8 @@ class CurrencySelector extends StatelessWidget {
               backgroundColor: Theme.of(context).primaryColor,
               child: Text(
                 selectedCurrency,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimary,
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
                 ),
@@ -202,7 +204,7 @@ class CurrencySelector extends StatelessWidget {
             ),
             Icon(
               Icons.arrow_drop_down,
-              color: Colors.grey.shade600,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ],
         ),

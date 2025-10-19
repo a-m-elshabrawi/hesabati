@@ -23,16 +23,16 @@ class TransactionDetailsScreen extends StatelessWidget {
           drawer: const AppNavigationDrawer(),
           appBar: AppBar(
             title: Text(appState.getLocalizedString('transactionDetails')),
-            leading: Builder(
-              builder: (context) => IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () => Scaffold.of(context).openDrawer(),
-              ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context),
             ),
             actions: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context),
+              Builder(
+                builder: (context) => IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
               ),
             ],
           ),
@@ -56,67 +56,72 @@ class TransactionDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildTransactionSummary(BuildContext context, AppState appState) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            // Category Icon
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: _getCategoryColor(transaction.category).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(40),
-              ),
-              child: Icon(
-                _getCategoryIcon(transaction.category),
-                color: _getCategoryColor(transaction.category),
-                size: 40,
-              ),
-            ),
-            const SizedBox(height: 16),
-            
-            // Amount
-            CurrencyText(
-              amount: transaction.amount,
-              showSign: true,
-              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            
-            // Transaction Title
-            Text(
-              _getTransactionTitle(transaction, appState.isArabic),
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            
-            // Category
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: _getCategoryColor(transaction.category).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: _getCategoryColor(transaction.category).withOpacity(0.3),
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 400),
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              children: [
+                // Category Icon
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: _getCategoryColor(transaction.category).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                  child: Icon(
+                    _getCategoryIcon(transaction.category),
+                    color: _getCategoryColor(transaction.category),
+                    size: 40,
+                  ),
                 ),
-              ),
-              child: Text(
-                _getCategoryName(transaction.category, appState.isArabic),
-                style: TextStyle(
-                  color: _getCategoryColor(transaction.category),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
+                const SizedBox(height: 16),
+                
+                // Amount
+                CurrencyText(
+                  amount: transaction.amount,
+                  showSign: true,
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
+                const SizedBox(height: 8),
+                
+                // Transaction Title
+                Text(
+                  _getTransactionTitle(transaction, appState.isArabic),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                
+                // Category
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: _getCategoryColor(transaction.category).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: _getCategoryColor(transaction.category).withOpacity(0.3),
+                    ),
+                  ),
+                  child: Text(
+                    _getCategoryName(transaction.category, appState.isArabic),
+                    style: TextStyle(
+                      color: _getCategoryColor(transaction.category),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

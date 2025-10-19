@@ -63,39 +63,21 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               ),
             ),
             child: SafeArea(
-              child: Stack(
-                children: [
-                  // App name fades in at bottom
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 48),
-                      child: FadeTransition(
-                        opacity: _fadeAnimation,
-                        child: Text(
-                          appState.getLocalizedString('appTitle'),
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Icon starts centered and smoothly moves upward
-                  AnimatedBuilder(
-                    animation: _positionAnimation,
-                    builder: (context, child) {
-                      final double dy = Tween<double>(begin: 0.0, end: -120.0).transform(_positionAnimation.value);
-                      return Transform.translate(
-                        offset: Offset(0, dy),
-                        child: child,
-                      );
-                    },
-                    child: Center(
-                      child: Container(
+              child: Center(
+                child: AnimatedBuilder(
+                  animation: _positionAnimation,
+                  builder: (context, child) {
+                    final double dy = Tween<double>(begin: 0.0, end: -120.0).transform(_positionAnimation.value);
+                    return Transform.translate(
+                      offset: Offset(0, dy),
+                      child: child,
+                    );
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Logo
+                      Container(
                         width: 96,
                         height: 96,
                         decoration: BoxDecoration(
@@ -115,9 +97,24 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                           color: AppColors.primaryBlue,
                         ),
                       ),
-                    ),
+                      
+                      const SizedBox(height: 24),
+                      
+                      // App name that floats along with the logo
+                      FadeTransition(
+                        opacity: _fadeAnimation,
+                        child: Text(
+                          appState.getLocalizedString('appTitle'),
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),

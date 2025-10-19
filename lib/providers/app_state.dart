@@ -257,7 +257,10 @@ class AppState extends ChangeNotifier {
       transactions: [],
     );
 
-    _accounts = [account1, account2, account3, childAccount1, childAccount2];
+
+    _accounts = [
+      account1, account2, account3, childAccount1, childAccount2
+    ];
     // Set default main account if none
     _mainAccountId ??= _accounts.isNotEmpty ? _accounts.first.id : null;
 
@@ -273,7 +276,7 @@ class AppState extends ChangeNotifier {
       ),
       Transaction(
         id: '2',
-        dateTime: DateTime.now().subtract(const Duration(days: 2)),
+        dateTime: DateTime.now().subtract(const Duration(days: 20)),
         description: 'Gas Station',
         amount: -45.00,
         category: TransactionCategory.transportation,
@@ -281,7 +284,7 @@ class AppState extends ChangeNotifier {
       ),
       Transaction(
         id: '3',
-        dateTime: DateTime.now().subtract(const Duration(days: 3)),
+        dateTime: DateTime.now().subtract(const Duration(days: 30)),
         description: 'Salary Deposit',
         amount: 3000.00,
         category: TransactionCategory.salary,
@@ -323,6 +326,34 @@ class AppState extends ChangeNotifier {
 
     // Add transactions to accounts
     _updateAccountTransactions();
+    
+    // Add a test transfer to demonstrate balance changes
+    _addTestTransfer();
+  }
+  
+  void _addTestTransfer() {
+    // Perform a test transfer from Main Bank Account to Savings Account
+    performTransfer('1', '3', 500.0, 'Test transfer to demonstrate balance changes');
+    
+    // Add a test expense transaction
+    addTransaction(Transaction(
+      id: 'test_expense_${DateTime.now().millisecondsSinceEpoch}',
+      dateTime: DateTime.now(),
+      description: 'Test Coffee Purchase',
+      amount: -15.50,
+      category: TransactionCategory.food,
+      accountId: '1',
+    ));
+    
+    // Add a test income transaction
+    addTransaction(Transaction(
+      id: 'test_income_${DateTime.now().millisecondsSinceEpoch}',
+      dateTime: DateTime.now(),
+      description: 'Test Bonus',
+      amount: 200.0,
+      category: TransactionCategory.salary,
+      accountId: '1',
+    ));
   }
 
   void _updateAccountTransactions() {
@@ -331,7 +362,24 @@ class AppState extends ChangeNotifier {
           .where((transaction) => transaction.accountId == account.id)
           .toList();
       
-      final updatedAccount = account.copyWith(transactions: accountTransactions);
+      // Calculate new balance based on transactions
+      final calculatedBalance = accountTransactions.fold(0.0, (sum, transaction) => sum + transaction.amount);
+      
+      // For credit cards, update usedAmount based on negative transactions
+      double? newUsedAmount = account.usedAmount;
+      if (account.type == AccountType.credit) {
+        final negativeTransactions = accountTransactions
+            .where((t) => t.amount < 0)
+            .fold(0.0, (sum, t) => sum + t.amount.abs());
+        newUsedAmount = negativeTransactions;
+      }
+      
+      final updatedAccount = account.copyWith(
+        transactions: accountTransactions,
+        balance: calculatedBalance,
+        usedAmount: newUsedAmount,
+      );
+      
       final index = _accounts.indexWhere((a) => a.id == account.id);
       if (index != -1) {
         _accounts[index] = updatedAccount;
@@ -527,22 +575,7 @@ class AppState extends ChangeNotifier {
     
     if (fromAccount == null || toAccount == null) return;
 
-    // Update account balances
-    final updatedFromAccount = fromAccount.copyWith(
-      balance: fromAccount.balance - amount,
-      usedAmount: fromAccount.type == AccountType.credit 
-          ? (fromAccount.usedAmount ?? 0) + amount 
-          : fromAccount.usedAmount,
-    );
-
-    final updatedToAccount = toAccount.copyWith(
-      balance: toAccount.balance + amount,
-    );
-
-    updateAccount(updatedFromAccount);
-    updateAccount(updatedToAccount);
-
-    // Add transfer transactions
+    // Add transfer transactions - balances will be automatically calculated
     final transferId = DateTime.now().millisecondsSinceEpoch.toString();
     
     // Use clean transfer descriptions without user descriptions
@@ -647,6 +680,22 @@ class AppState extends ChangeNotifier {
     }
     
     return accountTotals;
+  }
+
+  // Transaction methods
+  void createTransaction(Transaction transaction) {
+    _allTransactions.add(transaction);
+    
+    // Update the account's balance
+    final account = getAccountById(transaction.accountId);
+    if (account != null) {
+      final updatedAccount = account.copyWith(
+        balance: account.balance + transaction.amount,
+      );
+      updateAccount(updatedAccount);
+    }
+    
+    notifyListeners();
   }
 
   // Utility methods

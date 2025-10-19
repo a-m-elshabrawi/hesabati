@@ -8,6 +8,7 @@ import '../widgets/bank_logo_widget.dart';
 import '../widgets/navigation_drawer.dart';
 import 'account_form_screen.dart';
 import 'two_factor_auth_screen.dart';
+import 'home_screen.dart';
 import '../utils/number_formatter.dart';
 
 class TransferScreen extends StatefulWidget {
@@ -152,6 +153,14 @@ class _TransferScreenState extends State<TransferScreen> {
       return;
     }
 
+    // Count digits before cursor position to maintain proper cursor placement
+    int digitsBeforeCursor = 0;
+    for (int i = 0; i < cursorPosition && i < value.length; i++) {
+      if (value[i].contains(RegExp(r'\d'))) {
+        digitsBeforeCursor++;
+      }
+    }
+
     // Format the integer part with thousand separators
     final integerPart = parts[0];
     final formattedInteger = NumberFormatter.formatWholeNumber(
@@ -167,14 +176,26 @@ class _TransferScreenState extends State<TransferScreen> {
       formattedValue = formattedInteger;
     }
 
+    // Calculate new cursor position based on digit count
+    int newCursorPosition = 0;
+    int digitCount = 0;
+    for (int i = 0; i < formattedValue.length; i++) {
+      if (formattedValue[i].contains(RegExp(r'\d'))) {
+        digitCount++;
+        if (digitCount > digitsBeforeCursor) {
+          break;
+        }
+      }
+      newCursorPosition = i + 1;
+    }
+
     // Update the text field
     _amountController.text = formattedValue;
     
-    // Adjust cursor position
-    final newCursorPosition = (cursorPosition <= formattedValue.length) 
-        ? cursorPosition 
-        : formattedValue.length;
-    _amountController.selection = TextSelection.collapsed(offset: newCursorPosition);
+    // Set cursor position
+    _amountController.selection = TextSelection.collapsed(
+      offset: newCursorPosition.clamp(0, formattedValue.length)
+    );
   }
 
   void _performTransfer() async {
@@ -236,7 +257,12 @@ class _TransferScreenState extends State<TransferScreen> {
         ),
       );
 
-      Navigator.pop(context);
+      // Navigate back to home screen in all scenarios
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        (route) => false,
+      );
     }
   }
 
@@ -251,16 +277,16 @@ class _TransferScreenState extends State<TransferScreen> {
           drawer: const AppNavigationDrawer(),
           appBar: AppBar(
             title: Text(appState.getLocalizedString('transfer')),
-            leading: Builder(
-              builder: (context) => IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () => Scaffold.of(context).openDrawer(),
-              ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context),
             ),
             actions: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context),
+              Builder(
+                builder: (context) => IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
               ),
             ],
           ),
@@ -355,7 +381,7 @@ class _TransferScreenState extends State<TransferScreen> {
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<String>(
-                    value: _fromAccountId,
+                    initialValue: _fromAccountId,
                     isExpanded: true,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -456,7 +482,7 @@ class _TransferScreenState extends State<TransferScreen> {
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<String>(
-                    value: _toAccountId,
+                    initialValue: _toAccountId,
                     isExpanded: true,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),

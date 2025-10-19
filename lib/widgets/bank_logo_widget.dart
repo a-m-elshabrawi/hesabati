@@ -29,31 +29,56 @@ class BankLogoWidget extends StatelessWidget {
       backgroundColor: Colors.transparent,
       child: ClipOval(
         child: Image(
-          image: tempAccount.bankLogoProvider,
+          image: tempAccount.reliableBankLogoProvider,
           width: radius * 2,
           height: radius * 2,
           fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            // Return fallback widget when image fails to load
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
             return Container(
               width: radius * 2,
               height: radius * 2,
               decoration: BoxDecoration(
-                color: _getBankColor(bank),
+                color: _getBankColor(bank).withOpacity(0.3),
                 borderRadius: BorderRadius.circular(radius),
               ),
               child: Center(
-                child: Text(
-                  _getBankInitials(bank),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: radius * 0.6,
-                    fontWeight: FontWeight.bold,
+                child: SizedBox(
+                  width: radius * 0.8,
+                  height: radius * 0.8,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(_getBankColor(bank)),
                   ),
                 ),
               ),
             );
           },
+          errorBuilder: (context, error, stackTrace) {
+            return _buildFallbackLogo();
+          },
+        ),
+      ),
+    );
+  }
+
+  /// Build fallback logo with bank initials
+  Widget _buildFallbackLogo() {
+    return Container(
+      width: radius * 2,
+      height: radius * 2,
+      decoration: BoxDecoration(
+        color: _getBankColor(bank),
+        borderRadius: BorderRadius.circular(radius),
+      ),
+      child: Center(
+        child: Text(
+          _getBankInitials(bank),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: radius * 0.6,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

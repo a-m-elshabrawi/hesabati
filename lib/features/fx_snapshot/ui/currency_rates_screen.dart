@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../domain/models.dart';
 import '../data/snapshot_loader.dart';
@@ -70,6 +71,74 @@ class _CurrencyRatesScreenState extends State<CurrencyRatesScreen> {
     _convertedAmountController.text = convertedAmount.toStringAsFixed(2);
   }
 
+  void _formatAmount(String value) {
+    final cursorPosition = _amountController.selection.baseOffset;
+    final cleanValue = value.replaceAll(RegExp(r'[^\d.]'), '');
+    
+    if (cleanValue.isEmpty) {
+      _amountController.text = '';
+      _amountController.selection = const TextSelection.collapsed(offset: 0);
+      return;
+    }
+
+    final parts = cleanValue.split('.');
+    if (parts.length > 2) {
+      // Invalid format, don't update
+      return;
+    }
+
+    // Count digits before cursor position to maintain proper cursor placement
+    int digitsBeforeCursor = 0;
+    for (int i = 0; i < cursorPosition && i < value.length; i++) {
+      if (value[i].contains(RegExp(r'\d'))) {
+        digitsBeforeCursor++;
+      }
+    }
+
+    // Format the integer part with thousand separators
+    String integerPart = parts[0];
+    String formattedIntegerPart = '';
+    
+    for (int i = integerPart.length - 1; i >= 0; i--) {
+      formattedIntegerPart = integerPart[i] + formattedIntegerPart;
+      if ((integerPart.length - i) % 3 == 0 && i > 0) {
+        formattedIntegerPart = ',$formattedIntegerPart';
+      }
+    }
+
+    // Combine with decimal part if exists
+    String formattedValue = parts.length > 1 ? '$formattedIntegerPart.${parts[1]}' : formattedIntegerPart;
+
+    // Calculate new cursor position
+    int newCursorPosition = 0;
+    int digitCount = 0;
+    for (int i = 0; i < formattedValue.length; i++) {
+      if (formattedValue[i].contains(RegExp(r'\d'))) {
+        digitCount++;
+        if (digitCount > digitsBeforeCursor) {
+          break;
+        }
+      }
+      newCursorPosition = i + 1;
+    }
+
+    // Update the text field
+    _amountController.text = formattedValue;
+    
+    // Set cursor position
+    _amountController.selection = TextSelection.collapsed(
+      offset: newCursorPosition.clamp(0, formattedValue.length)
+    );
+  }
+
+  double? _parseFormattedNumber(String value) {
+    if (value.trim().isEmpty) return null;
+    
+    // Remove thousand separators (commas) and parse
+    final cleanValue = value.replaceAll(',', '');
+    return double.tryParse(cleanValue);
+  }
+
   List<String> get _availableCurrencies {
     return _snapshot?.rates.keys.toList() ?? [];
   }
@@ -91,12 +160,18 @@ class _CurrencyRatesScreenState extends State<CurrencyRatesScreen> {
             drawer: const AppNavigationDrawer(),
             appBar: AppBar(
               title: Text(appState.getLocalizedString('currencyExchange')),
-              leading: Builder(
-                builder: (context) => IconButton(
-                  icon: const Icon(Icons.menu),
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                ),
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.of(context).pop(),
               ),
+              actions: [
+                Builder(
+                  builder: (context) => IconButton(
+                    icon: const Icon(Icons.menu),
+                    onPressed: () => Scaffold.of(context).openDrawer(),
+                  ),
+                ),
+              ],
             ),
             body: Center(
               child: Column(
@@ -128,14 +203,18 @@ class _CurrencyRatesScreenState extends State<CurrencyRatesScreen> {
           drawer: const AppNavigationDrawer(),
           appBar: AppBar(
             title: Text(appState.getLocalizedString('currencyExchange')),
-            backgroundColor: Theme.of(context).primaryColor,
-            foregroundColor: Colors.white,
-            leading: Builder(
-              builder: (context) => IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () => Scaffold.of(context).openDrawer(),
-              ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.of(context).pop(),
             ),
+            actions: [
+              Builder(
+                builder: (context) => IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
+              ),
+            ],
           ),
           body: Column(
             children: [
@@ -307,14 +386,20 @@ class _CurrencyRatesScreenState extends State<CurrencyRatesScreen> {
               color: Theme.of(context).primaryColor,
             ),
             filled: isReadOnly,
-            fillColor: isReadOnly ? Colors.grey.shade100 : null,
+            fillColor: isReadOnly ? Theme.of(context).colorScheme.surfaceContainerHighest : null,
           ),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          inputFormatters: isReadOnly ? null : [
+            FilteringTextInputFormatter.allow(RegExp(r'[\d.,]')),
+          ],
           readOnly: isReadOnly,
           onChanged: isReadOnly ? null : (value) {
-            final parsed = double.tryParse(value);
-            if (parsed != null && parsed >= 0) {
-              onAmountChanged(parsed);
+            if (!isReadOnly) {
+              _formatAmount(value);
+              final parsed = _parseFormattedNumber(value);
+              if (parsed != null && parsed >= 0) {
+                onAmountChanged(parsed);
+              }
             }
           },
         ),
