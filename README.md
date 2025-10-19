@@ -21,6 +21,18 @@ A comprehensive fintech dashboard Flutter app that lets users view and manage mo
 - **Biometric Authentication**: Fake biometric/2FA confirmation animations
 - **Transfer History**: Complete transaction records
 
+### 💰 Add Funds
+- **Deposit Money**: Add funds to any account with custom descriptions
+- **Account Selection**: Choose which account to add funds to
+- **Amount Validation**: Real-time validation of deposit amounts
+- **Transaction Recording**: Automatically creates income transactions
+
+### 📝 Manual Transaction Entry
+- **Custom Transactions**: Add manual transactions to any account
+- **Category Selection**: Choose from predefined spending categories
+- **Amount & Description**: Full control over transaction details
+- **Real-time Updates**: Immediate reflection in account balances
+
 ### 👨‍👩‍👧‍👦 Child/Beneficiary Management
 - **Spending Limits**: Set and adjust spending limits for child cards
 - **Progress Tracking**: Visual progress bars showing used vs. limit
@@ -48,6 +60,7 @@ A comprehensive fintech dashboard Flutter app that lets users view and manage mo
 
 ### 🔐 Security Features
 - **Demo Authentication**: Visual login screen (no real backend)
+- **User Registration**: Create new accounts with clean slate
 - **Biometric Simulation**: Fake biometric authentication for transfers
 - **2FA Simulation**: Two-factor authentication animations
 
@@ -130,6 +143,11 @@ The app includes a custom wallet-themed icon. To set up the app icon:
 - **Email**: user@example.com
 - **Password**: password123
 
+### New User Registration
+- Create a new account with clean slate (no existing data)
+- Full name, email, phone, and password required
+- Automatic navigation to home screen after registration
+
 ## App Structure
 
 ```
@@ -157,17 +175,20 @@ lib/
 ├── providers/
 │   └── app_state.dart       # Main app state management
 ├── screens/
+│   ├── splash_screen.dart   # App splash screen
 │   ├── login_screen.dart    # Login screen
+│   ├── register_screen.dart # User registration
 │   ├── home_screen.dart     # Main dashboard
 │   ├── accounts_screen.dart # Account list
 │   ├── account_details_screen.dart # Account details
 │   ├── account_form_screen.dart # Add/edit accounts
 │   ├── transfer_screen.dart # Money transfer
+│   ├── add_funds_screen.dart # Add funds to accounts
+│   ├── add_transaction_screen.dart # Manual transaction entry
 │   ├── analytics_screen.dart # Spending analytics
 │   ├── beneficiaries_screen.dart # Child card management
 │   ├── settings_screen.dart # App settings
 │   ├── transaction_details_screen.dart # Transaction details
-│   ├── splash_screen.dart   # App splash screen
 │   └── two_factor_auth_screen.dart # 2FA authentication
 ├── utils/
 │   └── number_formatter.dart # Number formatting utilities
@@ -181,8 +202,9 @@ lib/
 
 ## Demo Walkthrough
 
-### 1. Login
-- Open the app and sign in with demo credentials
+### 1. Authentication
+- **Login**: Sign in with demo credentials (user@example.com / password123)
+- **Register**: Create a new account with clean slate
 - Toggle biometric authentication if desired
 
 ### 2. Home Dashboard
@@ -200,24 +222,36 @@ lib/
 - Experience biometric authentication simulation
 - View transfer success and updated balances
 
-### 5. Child Card Management
+### 5. Add Funds
+- Navigate to Add Funds from account details or home screen
+- Select target account for deposit
+- Enter amount and custom description
+- Funds are automatically added as income transactions
+
+### 6. Manual Transactions
+- Add custom transactions to any account
+- Select spending category and amount
+- Add detailed descriptions
+- Transactions immediately reflect in account balances
+
+### 7. Child Card Management
 - View child cards with spending limits
 - Adjust spending limits using sliders
 - Toggle notifications per child
 - Monitor spending progress
 
-### 6. Analytics
+### 8. Analytics
 - View spending breakdown by category
 - See percentages and amounts
 - Analyze spending patterns
 
-### 7. Foreign Exchange Rates
+### 9. Foreign Exchange Rates
 - View real-time currency exchange rates
 - Use the currency converter to calculate amounts
 - Select from 150+ supported currencies
 - See rates captured from snapshot data
 
-### 8. Settings
+### 10. Settings
 - Toggle between light and dark themes
 - Switch between English and Arabic
 - Configure security settings
@@ -231,6 +265,7 @@ The app includes realistic mock data:
 - **Realistic Balances**: Proper KWD amounts and spending limits
 - **150+ Currency Rates**: Real exchange rates snapshot from October 2025
 - **ISO 4217 Metadata**: Complete currency information and formatting rules
+- **New User Experience**: Clean slate for registered users (no pre-existing data)
 
 ## Features in Detail
 
@@ -288,6 +323,15 @@ The app includes realistic mock data:
 - **Clean Architecture**: Separation of concerns with data/domain/ui layers
 - **Provider Pattern**: Reactive state management
 - **Widget Composition**: Reusable UI components
+
+## Recent Updates
+
+### Version 1.0.0+1
+- **User Registration**: Added complete user registration flow
+- **Add Funds Feature**: Deposit money to any account with custom descriptions
+- **Manual Transaction Entry**: Add custom transactions with category selection
+- **Enhanced Navigation**: Improved screen flow and user experience
+- **Clean Slate Registration**: New users start with empty state
 
 ## Future Enhancements
 
